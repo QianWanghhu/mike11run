@@ -27,7 +27,7 @@ for model in sim11_L:
     p[model] = run_sim11(model, res11_lok)
     while p[model].poll() is None:
             # print("idzie")
-            time.sleep(120)
+            time.sleep(20) # change the sleep time to 20s
             p[model].kill()
             p[model].terminate()
 
