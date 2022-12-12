@@ -25,13 +25,15 @@ def sim11_index_unite(path):
                     sciezka = element.split("\\")
                     print(sciezka)
                     try:
-                        hd_res = lines[index + 1].split("|")[1]
+                        hd_res = lines[index + 1].split("||")[1]
                         hd_res = hd_res.split("\\")
+                        # breakpoint()
                         kropki = len(hd_res[0])
                         sciezka = sciezka[:-kropki]
                         hd_res = hd_res[1:]
                         sciezka = sciezka + hd_res
                     except:
+                        # breakpoint()
                         hd_res = lines[index + 1].split("'")[1]
                         sciezka = sciezka[:-1]
                         print(sciezka)
