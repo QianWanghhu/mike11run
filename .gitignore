@@ -58,3 +58,7 @@ localanalyzer_debug.spec
 output/
 
 input/
+
+src/RR python/
+
+src/RR python.zip
