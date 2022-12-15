@@ -2,9 +2,9 @@ import os
 import pandas as pd
 import numpy as np
 
-def update_nam(input_dir, f_mdata, rr_path, nam_name):
+def update_nam(input_dir, f_mdata, rr_path, rain_type, nam_name):
     """
-    Read txt files for forming the NAM model
+    Read txt files for forming the NAM model.
     """
     
     file_mdata = input_dir + f_mdata
@@ -14,10 +14,15 @@ def update_nam(input_dir, f_mdata, rr_path, nam_name):
     f_end=open(f'{input_dir}end.txt','r')
     f_para=open(f'{input_dir}para.txt','r')
     f_inputs=open(f'{input_dir}inputs.txt','r')
+    f_eva=open(f'{input_dir}eva.txt','r')
     text_start=f_start.read()
     text_para=f_para.read()
     text_final=f_end.read()
     text_inputs = f_inputs.read()
+    text_eva=f_eva.read()
+
+    # Replace rainfall with given rain_type
+    text_inputs = text_inputs.replace(rain_type[0], rain_type[1])
 
     # get catchment information
     Catchment = {}
@@ -39,8 +44,9 @@ def update_nam(input_dir, f_mdata, rr_path, nam_name):
 
         insert_2 +=  text_para + "\n"
         # Creat str for timeseries
-        insert_3 += "\n[Condition] \n Catchment_Name = \'" + str(Catchment["Catchment_Name"][i]) + '\'\n' + text_inputs + "\n"
-        
+        insert_3 += "\n[Condition] \n Catchment_Name = \'" + str(Catchment["Catchment_Name"][i]) + '\'\n' + text_inputs + \
+             "\n"+"\n[Condition] \n Catchment_Name = \'" + str(Catchment["Catchment_Name"][i]) + '\'\n' + text_eva + "\n"        
+    
     insert_1 = insert_1 + "\nEndSect // CatchList\n [CombinedList] \n EndSect // CombinedList \n[ParameterList] \n"
     insert_2 = insert_2 + "\nEndSect  // ParameterList \n [TimeseriesList]\n Max_Comb_Number = 8"
     insert_3 = insert_3 + '\nEndSect  // TimeseriesList \n'
@@ -55,6 +61,8 @@ def update_nam(input_dir, f_mdata, rr_path, nam_name):
     f_start.close()
     f_para.close()
     f_end.close()
+    f_eva.close()
+    f_inputs.close()
 
 
 def update_mike11(input_dir, output_dirt, sim11_file, sim11_output_name, \
@@ -71,12 +79,3 @@ def update_mike11(input_dir, output_dirt, sim11_file, sim11_output_name, \
         f'{output_dirt}{sim11_output_name}.sim11')
     f_sim11.close()
     f.close()
-
-
-# # Write a file
-# if __name__ == "__main__":
-#     input_dir = '../input/'
-#     f_mdata = 'model_mdata.xlsx'
-#     rr_path = '../output/NAM/'
-#     nam_name = 'nam_1'
-#     read_input(input_dir, f_mdata, rr_path, nam_name)
