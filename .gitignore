@@ -54,3 +54,7 @@ localanalyzer_debug.spec
 .credentials_store
 
 1210/
+
+output/
+
+input/
