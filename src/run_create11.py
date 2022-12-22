@@ -35,13 +35,4 @@ for rr in rr_list:
             f'hd_{sim11_output_name}.res11', f'rr_{sim11_output_name}.res11']
         
         update_mike11(input_dir, sim11_dir, sim11_file, sim11_output_name, old_text, replace_text)
-
-
-
-
-
-
-
-
-
-
+        
