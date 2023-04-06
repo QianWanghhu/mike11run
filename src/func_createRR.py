@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 
-def update_nam(input_dir, f_mdata, rr_path, rain_type, nam_name):
+def update_nam(input_dir, f_mdata, rr_path, rain_type, nam_name, update_evap):
     """
     Read txt files for forming the NAM model.
     """
@@ -22,7 +22,13 @@ def update_nam(input_dir, f_mdata, rr_path, rain_type, nam_name):
     text_eva=f_eva.read()
 
     # Replace rainfall with given rain_type
-    text_inputs = text_inputs.replace(rain_type[0], rain_type[1])
+    rain_pairs = list(rain_type.keys())
+    text_inputs = text_inputs.replace(rain_pairs[0], rain_pairs[1])
+    text_inputs = text_inputs.replace(rain_type[rain_pairs[0]], rain_type[rain_pairs[1]])
+
+    #update evap
+    if update_evap:
+        text_eva = text_eva.replace(rain_pairs[0], rain_pairs[1])
 
     # get catchment information
     Catchment = {}
