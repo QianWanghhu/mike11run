@@ -1,36 +1,24 @@
 import os
 import pandas as pd
+from mikeio1d.res1d import Res1D
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
-read11res_lok = "\"C:\\Program Files (x86)\\DHI\\2014\\bin\\x64\\res11read.exe\""
-res11_lok = '../output/'
-res_dirs = [res for res in os.listdir(res11_lok) if 'Result Files' in res]
+res11_lok = '../output/' # 给路径
 
-# for res in res_dirs:
-res_fns = [hd for hd in os.listdir(res11_lok + res_dirs[0]) if 'hd' in hd]
+# 指定结果文件路径
+res_dirs = [res for res in os.listdir(res11_lok) if 'Result Files' in res] 
 
-res_lok = res_fns[1]
 
-nazwa =  os.path.splitext(res_lok)[0]
-
+# read11res_lok = "\"C:\\Program Files (x86)\\DHI\\2014\\bin\\x64\\res11read.exe\""
+# nazwa =  os.path.splitext(res_lok)[0]
 # os.system(read11res_lok + " -xyh " + res11_lok + " " + res_lok + "\"")
- 
 # os.system(read11res_lok + " -xyh " + res11_lok + " " + res_lok + "\\" + nazwa + ".csv")
 #     # for hd_res in res_fns:
 # with open(res11_lok + res_dirs[0] + "/" + res_fns[0], 'r', encoding='utf-8', errors='ignore') as fin:
 #     f_text = fin.read().splitlines(True)
-
 # with open(res11_lok + nazwa + ".csv", 'r') as fin:
 #         data = fin.read().splitlines(True)
-
-
-from mikeio1d.res1d import Res1D
-res_lok = res_fns[1]
-filename = res11_lok +  res_dirs[0] + '/' + res_lok
-df1d=Res1D(filename)
-
-
 
 NAME_DELIMITER = ':'
 def read_all(df_obj):
@@ -62,4 +50,12 @@ def get_values(
                 yield data_item.CreateTimeSeriesData(i), col_name_i
 
 
-df_out = read_all(df1d)
+# Loop over all result files
+for res_dir in res_dirs:
+    res_fns = [hd for hd in os.listdir(res11_lok + res_dir) if 'res11' in hd]
+    for res_lok in res_fns:
+        # res_lok = res_fns[1]
+        filename = res11_lok +  res_dir + '/' + res_lok
+        df1d=Res1D(filename)
+        df_out = read_all(df1d)
+        df_out.to_csv(f'{filename[:-6]}.csv')
